@@ -9,8 +9,8 @@
 #define MOTOR_RIGHT_PWM_PIN			6
 
 #define SERVO_STEER_PIN			8
-#define STEER_MAX_ANGLE
-#define STEER_STRAIGHT_ANGLE	90
+#define STEER_MAX_ANGLE			45
+#define STEER_STRAIGHT_ANGLE	85
 
 #define IMU_FIELDS				3
 
