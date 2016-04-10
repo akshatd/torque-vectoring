@@ -1,14 +1,10 @@
-/**************************** INFO ********************************/
-
-// This code expects a message in the format: H 12.00,-345.00,678.00
-
-/******************************************************************/
-
 #include <TextFinder.h>
+#include <Servo.h>
 
-/*** Defines the frequency at which the data is requested ***/
-/*** frequency f=1/T, T=period; ie. 100ms --> f=10Hz, 200ms --> f=5Hz ***/
-#define PERIOD      20 // [ms]
+#define PERIOD      50 // [ms]
+
+unsigned long timer = 0;
+unsigned long currentTime = 0;
 
 /*** Vars for IMU ***/
 const int NUMBER_OF_FIELDS = 3; // how many comma seperated fields we expect  
@@ -20,37 +16,53 @@ float rpy2[NUMBER_OF_FIELDS];    // array holding values for all the fields
 
 float curr[2] = {0};
 float prev[2] = {0};
+
+float yaw=0;
+float steer_yaw=0;
+// for wheel speed
+unsigned long lastDet = 0;
+unsigned long nowDet = 0;
+
+float leftWheelRPS = 0;
+float leftWheelSpeed = 0;
+
+ void magnet_detect(){
+   nowDet = millis();
+   leftWheelRPS = 1000.0/((float)(nowDet-lastDet));
+   lastDet = nowDet;
+ }
+ 
+ //steering
+Servo myservo;
+int pos = 70;
+
 /************************************************************/
 /*** Setup
 /************************************************************/
-void setup()
-{
+void setup(){
   Serial.begin(57600);  // init the Serial port to print the data to PC
   Serial1.begin(57600); // init the Serial1 port to get data from the IMU
   Serial2.begin(57600); // init the Serial1 port to get data from the IMU
-
   delay(500);
-
   initIMUs();
+
+  pinMode(2, INPUT);
+  attachInterrupt(digitalPinToInterrupt(2), magnet_detect, RISING);//Initialize the intterrupt pin (Arduino digital pin 2)
+
+  myservo.attach(8);
+  myservo.write(pos);
 }
 
 /************************************************************/
 /*** Loop
 /************************************************************/
-void loop()
-{
-  // print manager timer
-  static unsigned long timer = 0;
-  static unsigned long currentTime = 0;
-
+void loop(){
   /************************************************************/
   /*** Request after a specific period for the data
   /************************************************************/
   currentTime = millis();
   if(currentTime - timer >= PERIOD){
-    // Request one output frame from the IMU
-    // #f only requests one reply, replies are still bound to the internal 20ms (50Hz) time raster.
-    // So worst case delay that #f can add is 19.99ms.
+    timer = currentTime;
     Serial1.write("#f");
     Serial2.write("#f");
     /************************************************************/
@@ -83,37 +95,17 @@ void loop()
       prev[1] = curr[1];
       curr[1] = rpy2[0];
     }
-    
-    /************************************************************/
-    /*** Print out the values
-    /*** Format: yaw, pitch, roll, left_Encoder, right_Encoder
-    /************************************************************/
-    if (found_HeaderChar){
-      // print Interval
-//      Serial.print(currentTime - timer);
-//      Serial.print("ms, ");
-
-      // print IMU values
-      // for(fieldIndex=0; fieldIndex < NUMBER_OF_FIELDS; fieldIndex++)
-      // {
-      //   Serial.print(rpy[fieldIndex]);
-      //   Serial.print(",");
-      // }
-      float yaw = (prev[0]+prev[1]-curr[0]-curr[1])/((float)PERIOD/500.0);
-//      float yaw = (prev[0]-curr[0]);
-//       float yaw2 = (prev[1]-curr[1]);
-      Serial.print("IMU yaw: ");
-      Serial.println(yaw);
-//      Serial.print("IMU2 yaw: ");
-//      Serial.println(yaw2);
-    }
-    timer = millis();
+ 	
+	yaw = (prev[0]+prev[1]-curr[0]-curr[1])/((float)PERIOD/500.0);
+	leftWheelSpeed = 17.55 * leftWheelRPS;
+	Serial.print(yaw);
+	Serial.print(",");
+	Serial.print(leftWheelSpeed);
+	Serial.print(",");      
+	Serial.println(pos-85);
+ 	 
   }
 }
-
-/********************************/
-/*** Initialize Functions
-/********************************/
 
 void initIMUs(){
   // Output angles in TEXT format & Turn off continuous streaming output & Disable error message output

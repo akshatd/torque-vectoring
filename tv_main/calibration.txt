@@ -5,9 +5,12 @@ acc
 -301, 216
 
 gyro
-10.23, 52.45, 9.12
+8.5, 53.09, 9.29
 
 mag
+#define CALIBRATION__MAGN_USE_EXTENDED true
+const float magn_ellipsoid_center[3] = {285.489, -450.311, -179.027};
+const float magn_ellipsoid_transform[3][3] = {{0.887380, -0.0408267, -0.0310440}, {-0.0408267, 0.896490, 0.0710896}, {-0.0310440, 0.0710896, 0.915008}};
 
 
 imu2
@@ -17,6 +20,9 @@ acc
 -280, 228
 
 gyro
--7.41, 7.84, 13.40
+-8.18, 7.65, 12.39
 
 mag
+#define CALIBRATION__MAGN_USE_EXTENDED true
+const float magn_ellipsoid_center[3] = {305.997, -670.552, -325.569};
+const float magn_ellipsoid_transform[3][3] = {{0.903370, -0.00579280, -0.0364588}, {-0.00579280, 0.864374, 0.0750694}, {-0.0364588, 0.0750694, 0.942125}};

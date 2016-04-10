@@ -213,12 +213,12 @@ boolean output_errors = false;  // true or false
 // Put MIN/MAX and OFFSET readings for your board here!
 // Accelerometer
 // "accel x,y,z (min/max) = X_MIN/X_MAX  Y_MIN/Y_MAX  Z_MIN/Z_MAX"
-#define ACCEL_X_MIN ((float) -278)
-#define ACCEL_X_MAX ((float) 273)
-#define ACCEL_Y_MIN ((float) -296)
-#define ACCEL_Y_MAX ((float) 279)
-#define ACCEL_Z_MIN ((float) -316)
-#define ACCEL_Z_MAX ((float) 217)
+#define ACCEL_X_MIN ((float) -274)
+#define ACCEL_X_MAX ((float) 287)
+#define ACCEL_Y_MIN ((float) -262)
+#define ACCEL_Y_MAX ((float) 294)
+#define ACCEL_Z_MIN ((float) -280)
+#define ACCEL_Z_MAX ((float) 228)
 
 // Magnetometer (standard calibration mode)
 // "magn x,y,z (min/max) = X_MIN/X_MAX  Y_MIN/Y_MAX  Z_MIN/Z_MAX"
@@ -232,14 +232,14 @@ boolean output_errors = false;  // true or false
 // Magnetometer (extended calibration mode)
 // Uncommend to use extended magnetometer calibration (compensates hard & soft iron errors)
 #define CALIBRATION__MAGN_USE_EXTENDED true
-const float magn_ellipsoid_center[3] = {177.988, 235.714, 141.198};
-const float magn_ellipsoid_transform[3][3] = {{0.823206, -0.00824965, -0.0140173}, {-0.00824965, 0.839865, 0.0246153}, {-0.0140173, 0.0246153, 0.994891}};
+const float magn_ellipsoid_center[3] = {305.997, -670.552, -325.569};
+const float magn_ellipsoid_transform[3][3] = {{0.903370, -0.00579280, -0.0364588}, {-0.00579280, 0.864374, 0.0750694}, {-0.0364588, 0.0750694, 0.942125}};
 
 // Gyroscope
 // "gyro x,y,z (current/average) = .../OFFSET_X  .../OFFSET_Y  .../OFFSET_Z
-#define GYRO_AVERAGE_OFFSET_X ((float) 13.33)
-#define GYRO_AVERAGE_OFFSET_Y ((float) 36.62)
-#define GYRO_AVERAGE_OFFSET_Z ((float) 19.48)
+#define GYRO_AVERAGE_OFFSET_X ((float) -8.18)
+#define GYRO_AVERAGE_OFFSET_Y ((float) 7.65)
+#define GYRO_AVERAGE_OFFSET_Z ((float) 12.39)
 
 /*
 // Calibration example:

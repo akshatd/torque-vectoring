@@ -1,33 +1,34 @@
-/*
-Arduino Hall Effect Sensor Project
-by Arvind Sanjeev
-Please check out  http://diyhacking.com for the tutorial of this project.
-DIY Hacking
-*/
 
+#define LOOP_PERIOD 50
+unsigned long now = 0;
+unsigned long lastLoop = 0;
+unsigned long lastDet = 0;
+unsigned long nowDet = 0;
 
- volatile byte half_revolutions;
- unsigned int rpm;
- unsigned long timeold;
- void setup()
- {
+volatile byte leftSpeedCounter = 0;
+float leftWheelRPS = 0;
+float leftWheelSpeed = 0;
+
+ void magnet_detect(){
+   nowDet = millis();
+   leftWheelRPS = 1000.0/((float)(nowDet-lastDet));
+   lastDet = nowDet;
+ }
+
+ void setup(){
    Serial.begin(115200);
-   attachInterrupt(2, magnet_detect, RISING);//Initialize the intterrupt pin (Arduino digital pin 2)
-   half_revolutions = 0;
-   rpm = 0;
-   timeold = 0;
+   pinMode(2, INPUT);
+   attachInterrupt(digitalPinToInterrupt(2), magnet_detect, FALLING);//Initialize the intterrupt pin (Arduino digital pin 2)
  }
- void loop()//Measure RPM
- {
-   if (half_revolutions >= 20) { 
-     rpm = 30*1000/(millis() - timeold)*half_revolutions;
-     timeold = millis();
-     half_revolutions = 0;
-     Serial.println(rpm,DEC);
+ void loop(){
+  now = millis();
+   if (now-lastLoop >= LOOP_PERIOD) { 
+    lastLoop = now;   
+    leftWheelSpeed = 17.55 * leftWheelRPS;
+     leftSpeedCounter = 0; 
+     Serial.print("RPS: ");
+     Serial.print(leftWheelRPS);
+     Serial.print(" , Speed: ");   
+     Serial.println(leftWheelSpeed);
    }
- }
- void magnet_detect()//This function is called whenever a magnet/interrupt is detected by the arduino
- {
-   half_revolutions++;
-   Serial.println("detect");
  }
